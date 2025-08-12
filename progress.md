@@ -40,14 +40,15 @@
   - Xóa phần "Joined at" trong slot.
   - Notification invite hiển thị username đúng, không lặp.
 
+### 3*. PvP Service (nâng cao) – phần đã xong
+- [x] Backend: Lưu PvP invite vào Notification DB + kèm link join room.
+- [x] Frontend: NotificationBell click vào invite → auto **join phòng** rồi **redirect** vào room.
+
 ---
 
 ## ⏳ B. CHƯA HOÀN THÀNH
-### 1. PvP Service (nâng cao)
-- [ ] Backend: Lưu PvP invite vào Notification DB + kèm link join room.
-- [ ] Frontend:
-  - NotificationBell click vào invite → join phòng ngay.
-  - UI Invite chọn user từ danh sách bạn bè thay vì prompt.
+### 1. PvP Service (nâng cao) – phần còn lại
+- [ ] UI Invite chọn user từ danh sách bạn bè thay vì prompt.
 
 ### 2. Leaderboard
 - [ ] Backend:
