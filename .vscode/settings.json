@@ -1,0 +1,20 @@
+{
+    "restoreTerminals.terminals": [
+  {
+    "splitTerminals": [
+      {
+        "name": "Terminal 1",
+        "commands": [
+          "cd D:\\Downloads\\cado4fun\\client"
+        ]
+      },
+      {
+        "name": "Terminal 2",
+        "commands": [
+          "cd D:\\Downloads\\cado4fun\\server"
+        ]
+      }
+    ]
+  }
+]
+}
