@@ -14,15 +14,28 @@ export default function NotificationBell() {
   const { get, patch, post } = useApi();
   const [notifications, setNotifications] = useState([]);
   const [dropdownOpen, setDropdownOpen]   = useState(false);
+  const [isRefreshing, setIsRefreshing]   = useState(false);
   const bellRef = useRef();
 
-  // Fetch recent notifications
-  useEffect(() => {
+  const fetchNotifications = async () => {
     if (!user) return;
-    get(`/notification?limit=100`)
-      .then(res => setNotifications(res.notifications || []))
-      .catch(() => setNotifications([]));
-  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+    try {
+      setIsRefreshing(true);
+      // Avoid caches by adding a timestamp
+      const res = await get(`/notification?limit=100&ts=${Date.now()}`);
+      setNotifications(res.notifications || []);
+    } catch {
+      setNotifications([]);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
+  // Initial fetch on user change
+  useEffect(() => {
+    fetchNotifications();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   // Real-time incoming notifications
   useSocket(user?.id, notif => {
@@ -101,19 +114,25 @@ export default function NotificationBell() {
                   }`}
                   title={n?.metadata?.path || ''}
                 >
-                  {/* message already includes inviter's name (from server) */}
                   <span>{n.message}</span>
                   <span className="text-xs">{new Date(n.createdAt).toLocaleString()}</span>
                 </li>
               ))
             )}
           </ul>
-          <div className="pt-2 text-right">
+          <div className="pt-2 flex items-center justify-between gap-2">
+            <button
+              onClick={fetchNotifications}
+              disabled={isRefreshing}
+              className="text-sm px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-60"
+            >
+              {isRefreshing ? 'Refreshing...' : 'Refresh'}
+            </button>
             <button
               onClick={() => { setDropdownOpen(false); router.push('/notifications'); }}
-              className="text-blue-600 text-sm hover:underline"
+              className="text-sm px-2 py-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
-              View all
+              View All
             </button>
           </div>
         </div>
