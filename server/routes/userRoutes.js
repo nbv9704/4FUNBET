@@ -5,64 +5,57 @@ const router     = express.Router();
 
 const auth       = require('../middleware/auth');
 const adminOnly  = require('../middleware/admin');
-const jadminOnly = require('../middleware/jadmin');
+const validateObjectId = require('../middleware/validateObjectId');
 const User       = require('../models/User');
+const { AppError } = require('../utils/AppError');
 
 // ADMIN: Get all users
-router.get('/', auth, adminOnly, async (req, res) => {
+router.get('/', auth, adminOnly, async (req, res, next) => {
   try {
     const users = await User.find().select('-password');
     res.json(users);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    next(err);
   }
 });
 
 // GET current user (self)
-router.get('/me', auth, async (req, res) => {
+router.get('/me', auth, async (req, res, next) => {
   try {
-    const user = await User
-      .findById(req.user.id)
-      .select('-password');
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) throw new AppError('USER_NOT_FOUND', 404, 'User not found');
     res.json(user);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    next(err);
   }
 });
 
 // GET any user's username (for transfer confirm)
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', auth, validateObjectId('id'), async (req, res, next) => {
   try {
     const u = await User.findById(req.params.id).select('username');
-    if (!u) return res.status(404).json({ error: 'User not found' });
+    if (!u) throw new AppError('USER_NOT_FOUND', 404, 'User not found');
     res.json({ username: u.username });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    next(err);
   }
 });
 
 // UPDATE profile (self)
-// PATCH /api/user/me
-router.patch('/me', auth, async (req, res) => {
+router.patch('/me', auth, async (req, res, next) => {
   try {
     const { username, email, avatar, dateOfBirth, currentPassword } = req.body;
 
     if (!currentPassword) {
-      return res.status(400).json({ error: 'Vui lòng nhập mật khẩu hiện tại' });
+      throw new AppError('INVALID_INPUT', 400, 'Current password is required');
     }
 
     const user = await User.findById(req.user.id);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
+    if (!user) throw new AppError('USER_NOT_FOUND', 404, 'User not found');
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      return res.status(400).json({ error: 'Mật khẩu hiện tại không đúng' });
+      throw new AppError('INVALID_PASSWORD', 400, 'Current password is incorrect');
     }
 
     if (username) user.username = username;
@@ -75,25 +68,32 @@ router.patch('/me', auth, async (req, res) => {
     const { password, ...safeUser } = user.toObject();
     res.json(safeUser);
   } catch (err) {
-    console.error(err);
     if (err.code === 11000) {
-      if (err.keyPattern?.username) return res.status(400).json({ error: 'Username đã tồn tại' });
-      if (err.keyPattern?.email) return res.status(400).json({ error: 'Email đã tồn tại' });
+      if (err.keyPattern?.username) {
+        return next(new AppError('DUPLICATE_USERNAME', 400, 'Username already exists'));
+      }
+      if (err.keyPattern?.email) {
+        return next(new AppError('DUPLICATE_EMAIL', 400, 'Email already exists'));
+      }
     }
-    res.status(500).json({ error: 'Server error' });
+    next(err);
   }
 });
 
 // CHANGE password (self)
-// POST /api/user/me/password
-router.post('/me/password', auth, async (req, res) => {
+router.post('/me/password', auth, async (req, res, next) => {
   try {
     const { oldPassword, newPassword } = req.body;
+    
+    if (!oldPassword || !newPassword) {
+      throw new AppError('INVALID_INPUT', 400, 'Old and new passwords are required');
+    }
+    
     const user = await User.findById(req.user.id);
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    if (!user) throw new AppError('USER_NOT_FOUND', 404, 'User not found');
 
     const match = await bcrypt.compare(oldPassword, user.password);
-    if (!match) return res.status(400).json({ error: 'Old password is incorrect' });
+    if (!match) throw new AppError('INVALID_PASSWORD', 400, 'Old password is incorrect');
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(newPassword, salt);
@@ -101,8 +101,7 @@ router.post('/me/password', auth, async (req, res) => {
 
     res.json({ message: 'Password changed successfully' });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    next(err);
   }
 });
 
