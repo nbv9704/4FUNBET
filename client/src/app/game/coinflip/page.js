@@ -1,31 +1,38 @@
+// client/src/app/game/coinflip/page.js
 'use client'
 
 import { useState } from 'react'
 import useApi from '../../../hooks/useApi'
 import { useUser } from '../../../context/UserContext'
-import Loading from '../../../components/Loading'
 import { toast } from 'react-hot-toast'
 
 export default function CoinflipPage() {
   const [betAmount, setBetAmount] = useState(1)
   const [side, setSide] = useState('heads')
   const [result, setResult] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [isFlipping, setIsFlipping] = useState(false) // animation state
+  const [isFlipping, setIsFlipping] = useState(false)
+
   const { post } = useApi()
   const { updateBalance } = useUser()
 
   const handleFlip = async (e) => {
     e.preventDefault()
+    if (betAmount <= 0) {
+      toast.error('Bet must be > 0')
+      return
+    }
     setIsFlipping(true)
-    setResult(null) // reset kết quả cũ
+    setResult(null)
+
     try {
+      // Không gửi clientSeed — server vẫn chạy fair RNG với seed/nonce của nó
       const data = await post('/game/coinflip', { betAmount, side })
+
       setTimeout(() => {
         setResult({
           result: data.result,
           win: data.win,
-          payout: data.win ? betAmount : 0, // thêm payout
+          payout: data.payout,   // ✅ tin server
           balance: data.balance,
         })
         updateBalance(data.balance)
@@ -36,35 +43,33 @@ export default function CoinflipPage() {
         } else {
           toast.error(`😢 You lose. The coin showed ${data.result}`)
         }
-      }, 1500) // delay cho animation
+      }, 1500)
     } catch (err) {
-      toast.error(err.message)
+      toast.error(err.message || 'Flip failed')
       setIsFlipping(false)
     }
   }
 
-  if (loading) return <Loading text="Flipping the coin..." />
-
   return (
-    <div className="p-8">
+    <div className="p-8 max-w-xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Coinflip</h1>
 
       {/* Bet form */}
       <form onSubmit={handleFlip} className="space-y-4 mb-6">
-        <div>
-          <label className="mr-2 font-medium">Bet Amount:</label>
+        <div className="flex items-center gap-2">
+          <label className="w-36 font-medium">Bet Amount:</label>
           <input
             type="number"
             min="1"
             value={betAmount}
             onChange={(e) => setBetAmount(+e.target.value)}
-            className="border rounded px-2 py-1 w-24"
+            className="border rounded px-2 py-1 w-32"
           />
         </div>
 
-        <div>
-          <label className="mr-4 font-medium">Choose Side:</label>
-          <label className="mr-4">
+        <div className="flex items-center gap-4">
+          <span className="w-36 font-medium">Choose Side:</span>
+          <label className="flex items-center gap-1">
             <input
               type="radio"
               name="side"
@@ -72,9 +77,9 @@ export default function CoinflipPage() {
               checked={side === 'heads'}
               onChange={() => setSide('heads')}
             />
-            <span className="ml-1">Heads</span>
+            Heads
           </label>
-          <label>
+          <label className="flex items-center gap-1">
             <input
               type="radio"
               name="side"
@@ -82,20 +87,20 @@ export default function CoinflipPage() {
               checked={side === 'tails'}
               onChange={() => setSide('tails')}
             />
-            <span className="ml-1">Tails</span>
+            Tails
           </label>
         </div>
 
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-60"
           disabled={isFlipping}
         >
           {isFlipping ? 'Flipping...' : 'Flip Coin'}
         </button>
       </form>
 
-      {/* Coin Animation */}
+      {/* Coin Animation + Result */}
       <div className="mt-6 flex flex-col items-center">
         <div
           className={`w-24 h-24 rounded-full border-4 flex items-center justify-center text-xl font-bold
@@ -103,10 +108,12 @@ export default function CoinflipPage() {
         >
           {isFlipping ? '' : result?.result?.toUpperCase() || '?'}
         </div>
+
         {result && !isFlipping && (
-          <div className="mt-4 text-center space-y-2">
-            <p className="text-xl">Payout: {result.payout}</p>
-            <p className="font-semibold">Balance: {result.balance}</p>
+          <div className="mt-4 w-full text-center space-y-1">
+            <p className="text-lg">{result.win ? '✅ You WON' : '❌ You LOST'}</p>
+            <p>Payout: <b>{result.payout}</b></p>
+            <p>Balance: <b>{result.balance}</b></p>
           </div>
         )}
       </div>

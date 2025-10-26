@@ -1,11 +1,13 @@
+// client/src/app/history/page.js
 'use client'
 
+import RequireAuth from '@/components/RequireAuth'
 import { useState, useEffect } from 'react'
 import useApi from '../../hooks/useApi'
 import { useUser } from '../../context/UserContext'
 import Loading from '../../components/Loading'
 
-export default function HistoryPage() {
+function HistoryPage() {
   const { user } = useUser()
   const { get } = useApi()
 
@@ -131,3 +133,4 @@ export default function HistoryPage() {
     </div>
   )
 }
+export default RequireAuth(HistoryPage)

@@ -1,5 +1,7 @@
+// client/src/app/notifications/page.js
 'use client'
 
+import RequireAuth from '@/components/RequireAuth'
 import { useState, useEffect } from 'react'
 import { useUser } from '../../context/UserContext'
 import useApi from '../../hooks/useApi'
@@ -13,7 +15,7 @@ const TYPE_LABELS = {
   transfer_received: 'Receipt',
 }
 
-export default function NotificationsPage() {
+function NotificationsPage() {
   const { user } = useUser()
   const { get, patch } = useApi()
   const [notifications, setNotifications] = useState([])
@@ -113,3 +115,4 @@ export default function NotificationsPage() {
     </div>
   )
 }
+export default RequireAuth(NotificationsPage)

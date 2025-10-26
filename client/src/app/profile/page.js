@@ -1,11 +1,13 @@
+// client/src/app/profile/page.js
 'use client'
 
+import RequireAuth from '@/components/RequireAuth'
 import { useUser } from '../../context/UserContext'
 import Loading from '../../components/Loading'
 import Link from 'next/link'
 import { toast } from 'react-hot-toast'
 
-export default function ProfilePage() {
+function ProfilePage() {
   const { user } = useUser()
 
   if (!user) return <Loading text="Đang tải Profile…" />
@@ -71,3 +73,4 @@ export default function ProfilePage() {
     </div>
   )
 }
+export default RequireAuth(ProfilePage)

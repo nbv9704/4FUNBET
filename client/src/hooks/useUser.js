@@ -1,3 +1,5 @@
+// client/src/hooks/useUser.js
+
 'use client'
 
 import { useState, useEffect } from 'react'

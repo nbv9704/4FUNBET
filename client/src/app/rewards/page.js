@@ -1,5 +1,7 @@
+// client/src/app/rewards/page.js
 'use client'
 
+import RequireAuth from '@/components/RequireAuth'
 import { useState, useEffect } from 'react'
 import useApi from '../../hooks/useApi'
 import { useUser } from '../../context/UserContext'
@@ -27,7 +29,7 @@ function formatTime(seconds) {
   return result
 }
 
-export default function RewardsPage() {
+function RewardsPage() {
   const { user, updateBalance } = useUser()
   const { get, post }          = useApi()   // chỉ lấy get và post
 
@@ -132,3 +134,4 @@ export default function RewardsPage() {
     </div>
   )
 }
+export default RequireAuth(RewardsPage)

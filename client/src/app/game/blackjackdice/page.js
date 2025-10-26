@@ -1,3 +1,4 @@
+// client/src/app/game/blackjackdice/page.js
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -14,7 +15,7 @@ export default function BlackjackDicePage() {
   const [hasPendingGame, setHasPendingGame] = useState(false)
   const { post } = useApi()
   const { updateBalance } = useUser()
-
+  
   useEffect(() => {
     const checkGame = async () => {
       try {

@@ -1,12 +1,24 @@
 // client/src/app/game/battle/page.js
 "use client";
+
+import RequireAuth from '@/components/RequireAuth'
 import { GAMES } from "@/data/games";
 import Link from "next/link";
+import GameCard from "@/components/GameCard";
 
-export default function BattleSelectPage() {
+const HAS_THUMB = new Set(["coinflip", "dice", "blackjackdice"]);
+
+function BattleSelectPage() {
   const battleGames = GAMES.filter((g) => g.supports.includes("battle"));
+  const sorted = [...battleGames].sort((a, b) => {
+    const aHas = HAS_THUMB.has(a.id) ? 1 : 0;
+    const bHas = HAS_THUMB.has(b.id) ? 1 : 0;
+    if (bHas !== aHas) return bHas - aHas;
+    return a.name.localeCompare(b.name);
+  });
+
   return (
-    <div className="p-4 max-w-5xl mx-auto">
+    <div className="p-4 max-w-6xl mx-auto">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-semibold">Battle — Select a game</h1>
         <Link href="/game" className="text-sm underline">
@@ -14,19 +26,19 @@ export default function BattleSelectPage() {
         </Link>
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {battleGames.map((g) => (
+      {/* Đồng bộ lưới và card với Solo */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 items-stretch">
+        {sorted.map((g) => (
           <Link
             key={g.id}
             href={`/game/battle/${g.id}`}
-            className="rounded-2xl border shadow p-4 hover:bg-gray-50"
+            className="block rounded-2xl focus:outline-none focus:ring-2 focus:ring-offset-2"
           >
-            <div className="text-3xl">{g.icon}</div>
-            <div className="mt-2 font-semibold">{g.name}</div>
-            <div className="text-sm opacity-70">Min bet: {g.minBet}</div>
+            <GameCard mode={g.id} fluid />
           </Link>
         ))}
       </div>
     </div>
   );
 }
+export default RequireAuth(BattleSelectPage)

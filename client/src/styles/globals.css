@@ -13,6 +13,9 @@
 }
 
 @layer utilities {
+  /* ====== EXISTING ANIMATIONS ====== */
+  
+  /* 🪙 Coinflip animation */
   @keyframes flip {
     0% { transform: rotateY(0deg); }
     50% { transform: rotateY(180deg); }
@@ -65,5 +68,262 @@
 
   .animate-slide-out {
     animation: slide-out-right 0.3s ease-in forwards;
+  }
+
+  /* ====== NEW ANIMATIONS FOR GAMES ====== */
+
+  /* 🎡 Roulette Wheel Spin */
+  @keyframes wheel-spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-wheel-spin {
+    animation: wheel-spin 0.5s linear infinite;
+  }
+
+  /* 🎰 Slots Reel Spin */
+  @keyframes reel-spin {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    25% {
+      transform: translateY(-10px);
+    }
+    50% {
+      transform: translateY(0);
+    }
+    75% {
+      transform: translateY(10px);
+    }
+  }
+
+  .animate-reel-spin {
+    animation: reel-spin 0.3s ease-in-out infinite;
+  }
+
+  /* ⬆️⬇️ Number Reveal Animation */
+  @keyframes number-reveal {
+    0% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-number-reveal {
+    animation: number-reveal 0.5s ease-out;
+  }
+
+  /* 💫 Pulse Strong (for emphasis) */
+  @keyframes pulse-strong {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: scale(1.05);
+    }
+  }
+
+  .animate-pulse-strong {
+    animation: pulse-strong 1s ease-in-out infinite;
+  }
+
+  /* 🏆 Win Flash Animation */
+  @keyframes win-flash {
+    0%, 100% {
+      box-shadow: 0 0 0 rgba(234, 179, 8, 0);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(234, 179, 8, 0.8);
+    }
+  }
+
+  .animate-win-flash {
+    animation: win-flash 0.5s ease-in-out 3;
+  }
+
+  /* 🎊 Confetti Effect (optional) */
+  @keyframes confetti-fall {
+    0% {
+      transform: translateY(-100vh) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+
+  .animate-confetti {
+    animation: confetti-fall 3s ease-in-out infinite;
+  }
+
+  /* 📈 Slide Up (for notifications) */
+  @keyframes slide-up {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.3s ease-out;
+  }
+
+  /* 🌟 Shimmer Effect (for buttons) */
+  @keyframes shimmer {
+    0% {
+      background-position: -200% center;
+    }
+    100% {
+      background-position: 200% center;
+    }
+  }
+
+  .animate-shimmer {
+    background-size: 200% auto;
+    animation: shimmer 3s linear infinite;
+  }
+
+  /* 💥 Shake Animation (for errors) */
+  @keyframes shake {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+      transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+      transform: translateX(5px);
+    }
+  }
+
+  .animate-shake {
+    animation: shake 0.5s ease-in-out;
+  }
+
+  /* 🎯 Bounce (for win scenarios) */
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-bounce-in {
+    animation: bounce-in 0.5s ease-out;
+  }
+
+  /* 🔄 Rotate (for loading spinners) */
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-rotate {
+    animation: rotate 1s linear infinite;
+  }
+
+  /* ====== UTILITY CLASSES ====== */
+
+  /* Gradient Text */
+  .text-gradient {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600;
+  }
+
+  .text-gradient-gold {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600;
+  }
+
+  .text-gradient-rainbow {
+    @apply text-transparent bg-clip-text;
+    background-image: linear-gradient(
+      to right,
+      #ef4444,
+      #f59e0b,
+      #10b981,
+      #3b82f6,
+      #8b5cf6
+    );
+  }
+
+  /* Glass Effect */
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+
+  .glass-dark {
+    @apply bg-black/10 backdrop-blur-md border border-black/20;
+  }
+
+  /* Card Effects */
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+
+  .card-glow {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/50;
+  }
+
+  /* Button Effects */
+  .btn-shine {
+    @apply relative overflow-hidden;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+  }
+
+  .btn-glow {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-current/50;
+  }
+
+  /* Neon Effects */
+  .neon-blue {
+    text-shadow: 0 0 10px #3b82f6, 0 0 20px #3b82f6, 0 0 30px #3b82f6;
+  }
+
+  .neon-pink {
+    text-shadow: 0 0 10px #ec4899, 0 0 20px #ec4899, 0 0 30px #ec4899;
+  }
+
+  .neon-green {
+    text-shadow: 0 0 10px #10b981, 0 0 20px #10b981, 0 0 30px #10b981;
+  }
+
+  .neon-yellow {
+    text-shadow: 0 0 10px #f59e0b, 0 0 20px #f59e0b, 0 0 30px #f59e0b;
   }
 }

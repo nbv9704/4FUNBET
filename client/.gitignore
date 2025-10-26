@@ -30,12 +30,86 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# ===== Environment Variables ===== #
+# Ignore all .env files by default
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env*.local
 
-# vercel
+# EXCEPT .env.example files (these should be committed for documentation)
+!.env.example
+!**/.env.example
+
+# ===== Logs ===== #
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Server logs directory
+server/logs/
+client/logs/
+
+# ===== Docker ===== #
+docker-compose.override.yml
+*.env.docker
+
+# ===== IDE / Editor ===== #
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# ===== OS Files ===== #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ===== Build Outputs ===== #
+dist/
+build/
+out/
+.next/
+
+# ===== Vercel ===== #
 .vercel
 
-# typescript
+# ===== TypeScript ===== #
 *.tsbuildinfo
 next-env.d.ts
+
+# ===== Database ===== #
+*.db
+*.sqlite
+*.sqlite3
+
+# ===== Temporary Files ===== #
+tmp/
+temp/
+*.tmp
+*.temp
+
+# ===== Package Manager ===== #
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ===== Coverage ===== #
+coverage/
+.nyc_output/

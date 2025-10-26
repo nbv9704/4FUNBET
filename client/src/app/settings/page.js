@@ -1,12 +1,14 @@
+// client/src/app/settings/page.js
 'use client'
 
+import RequireAuth from '@/components/RequireAuth'
 import { useState, useEffect } from 'react'
 import useApi from '../../hooks/useApi'
 import { useUser } from '../../context/UserContext'
 import Loading from '../../components/Loading'
 import { toast } from 'react-hot-toast'
 
-export default function SettingsPage() {
+function SettingsPage() {
   const { user, fetchUser, logout } = useUser()
   const { patch, post } = useApi()
 
@@ -186,3 +188,4 @@ export default function SettingsPage() {
     </div>
   )
 }
+export default RequireAuth(SettingsPage)

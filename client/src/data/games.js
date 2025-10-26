@@ -1,10 +1,58 @@
 // client/src/data/games.js
+// status: 'live' | 'coming_soon'
 export const GAMES = [
-  { id: "coinflip",     name: "Coinflip",      minBet: 1, supports: ["solo", "battle"], icon: "🪙" },
-  { id: "dice",         name: "Dice",          minBet: 1, supports: ["solo", "battle"], icon: "🎲" },
-  { id: "blackjackdice",name: "Blackjack Dice",minBet: 5, supports: ["solo"],           icon: "🃏" },
-  { id: "roulette",     name: "Roulette",      minBet: 5, supports: ["solo"],           icon: "🎡" },
-  { id: "higherlower",  name: "Higher/Lower",  minBet: 1, supports: ["solo"],           icon: "⬆️⬇️" },
-  { id: "slots",        name: "Slots",         minBet: 1, supports: ["solo"],           icon: "🎰" },
-  // Add more as needed
-];
+  {
+    id: "coinflip",
+    name: "Coinflip",
+    minBet: 1,
+    supports: ["solo", "battle"],
+    icon: "🪙",
+    status: "live",
+    description: "Double-or-nothing coin toss with provably-fair reveals.",
+  },
+  {
+    id: "dice",
+    name: "Dice",
+    minBet: 1,
+    supports: ["solo", "battle"],
+    icon: "🎲",
+    status: "live",
+    description: "Roll to target — simple odds, quick rounds, high adrenaline.",
+  },
+  {
+    id: "blackjackdice",
+    name: "Blackjack Dice",
+    minBet: 5,
+    supports: ["solo"],
+    icon: "🃏",
+    status: "live",
+    description: "Reach 21 with dice — blackjack rules, dice thrills.",
+  },
+  {
+    id: "roulette",
+    name: "Roulette",
+    minBet: 5,
+    supports: ["solo"],
+    icon: "🎡",
+    status: "live",
+    description: "Classic roulette board — red/black, dozens, and more.",
+  },
+  {
+    id: "higherlower",
+    name: "Higher/Lower",
+    minBet: 1,
+    supports: ["solo"],
+    icon: "⬆️⬇️",
+    status: "live",
+    description: "Predict the next number — simple and satisfying.",
+  },
+  {
+    id: "slots",
+    name: "Slots",
+    minBet: 1,
+    supports: ["solo"],
+    icon: "🎰",
+    status: "live",
+    description: "Spin to win — vibrant reels and juicy bonuses.",
+  },
+]

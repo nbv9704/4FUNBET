@@ -22,7 +22,8 @@ export function UserProvider({ children }) {
         username: u.username,
         email: u.email,
         avatar: u.avatar || '',
-        dateOfBirth: u.dateOfBirth || null
+        dateOfBirth: u.dateOfBirth || null,
+        role: u.role || 'user', // ⬅️ thêm role để phân quyền hiển thị Admin Health
       })
       setBalance(u.balance)
       setBank(u.bank)

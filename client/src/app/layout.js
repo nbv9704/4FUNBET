@@ -1,4 +1,4 @@
-// layout.js
+// app/layout.js
 import '../styles/globals.css'
 import Layout from '../components/Layout'
 import ClientProviders from './providers'
@@ -12,16 +12,15 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+      <body className="bg-white dark:bg-gray-900 text-gray-100 transition-colors duration-300">
         <ClientProviders>
           <Layout>{children}</Layout>
           <Toaster
             position="top-right"
             toastOptions={{
-              duration: 1000, // hiển thị 2 giây rồi biến mất
-              style: {
-                transition: 'opacity 0.2s ease-in-out', // fade nhanh hơn mặc định
-              }
+              // đúng 1.5 giây như yêu cầu
+              duration: 1500,
+              // dùng animation mặc định của react-hot-toast
             }}
           />
         </ClientProviders>

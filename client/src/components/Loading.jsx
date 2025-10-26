@@ -1,9 +1,10 @@
+// client/src/components/Loading.jsx
 'use client'
 
-export default function Loading({ text = 'Đang tải...' }) {
+export default function Loading({ text = 'Đang tải…' }) {
   return (
     <div className="p-8 text-center">
-      {text}
+      <span>{text}</span>  // Bỏ suppressHydrationWarning
     </div>
-  );
+  )
 }

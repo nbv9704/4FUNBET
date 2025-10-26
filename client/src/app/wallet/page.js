@@ -1,13 +1,14 @@
 // client/src/app/wallet/page.js
 'use client'
 
+import RequireAuth from '@/components/RequireAuth'
 import { useState, useEffect } from 'react'
 import useApi from '../../hooks/useApi'
 import { useUser } from '../../context/UserContext'
 import Loading from '../../components/Loading'
 import { toast } from 'react-hot-toast'
 
-export default function WalletPage() {
+function RewardsPage() {
   const { user, balance, bank, updateBalance, updateBank } = useUser()
   const { post, get } = useApi()
 
@@ -302,3 +303,4 @@ export default function WalletPage() {
     </div>
   )
 }
+export default RequireAuth(RewardsPage)
